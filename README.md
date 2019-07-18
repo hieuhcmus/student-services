@@ -45,10 +45,47 @@ Only the students with the fields that match all the given search fields will be
 curl -i localhost:8080//students/search?firstName=Hieu&lastName=Tran
 ```
 
+The following elasticsearch DSL query will be generated in the repository:
+```
+{
+  "query": {
+    "bool" : {
+      "must" : {
+        "match": {
+            "firstName": "..."
+         },
+         "match": {
+            "lastName": "..."
+         },
+         "match": {
+            "schoolCode": "..."
+         },
+         "match": {
+            "id": "..."
+         },
+         "match": {
+            "grade": "..."
+         }
+      }
+    }
+}
+```
 
 #### Full text search: GET /students/searchFullText?query=
 Full text search on the fields: firstName, lastName, schoolCode, grade, id
 Student is returned if one of the fields matches the given query string.
+
+generated elasticsearch DSL query:
+```
+{
+    "query": {
+        "query_string" : {
+            "fields" : ["firstName", "lastName", "schoolCode", "grade", "id"],
+            "query" : "..."
+        }
+    }
+}
+```
 
 
 ### Integration test
