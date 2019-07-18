@@ -1,7 +1,12 @@
 # Student elasticsearch
 
 ### Project Overview
-The project use Spring boot, spring elasticsearch data and restful web services to post/update/search the data in ElasticSearch 
+The project implements restful services to push/retrieve the data from elasticsearch server.
+The project applies Onion architecture, currently there are 4 modules:
+  - domain: contains the domain model and business logic of the project, interfaces. It interacts with the outer layers by the interfaces. This is essentially the dependency inversion principle. The domain module only uses the builtin java library, it's independent and very easy to test. At the moment, as the project is simple, there are not much business logic here.
+  - Application services: here application specific logic i.e. our use cases reside, currently there is nothing
+  - repository: the implementation of repository interface in domain module, elasticsearch is used in this module. We can easily switch over to the other database without changing the domain module.
+  - student-rest-services: The restful services to post/retrieve the data in to elasticsearch server.
 
 ### Data model
 
