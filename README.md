@@ -22,85 +22,46 @@ The project use Spring boot, spring elasticsearch data and restful web services 
 | medicalNotes | String      |    N | N |
 
 ### Integration test
-Maven fail safe plugin will run all the integration tests, here I configured it to run only the test ended with "IT"
+Maven fail safe plugin will run all the integration tests, here I configured it to run only the test ended with "IntegrationTest"
 
+
+Before running integration tests, we will start elasticsearch container in docker using testcontainers maven plugin
 ```
-<plugin>
-  <groupId>org.apache.maven.plugins</groupId>
-  <artifactId>maven-failsafe-plugin</artifactId>
-  <configuration>
-    <includes>
-      <include>**/*IT.java</include>
-    </includes>
-  </configuration>
-  <executions>
-    <execution>
-      <goals>
-        <goal>integration-test</goal>
-        <goal>verify</goal>
-      </goals>
-    </execution>
-  </executions>
-</plugin>
+<dependency>
+  <groupId>org.testcontainers</groupId>
+  <artifactId>testcontainers</artifactId>
+  <version>1.11.4</version>
+</dependency>
+<dependency>
+  <groupId>org.testcontainers</groupId>
+  <artifactId>elasticsearch</artifactId>
+  <version>1.11.4</version>
+  <scope>test</scope>
+</dependency>
 ```
 
-Before running integration tests, we will start elasticsearch container in docker using docker-maven-plugin
+in StudentServicesIntegrationTest, start elasticsearch container:
 ```
-<plugin>
-  <groupId>io.fabric8</groupId>
-  <artifactId>docker-maven-plugin</artifactId>
-  <version>0.30.0</version>
-  <executions>
-    <execution>
-      <id>prepare-it-database</id>
-      <phase>pre-integration-test</phase>
-      <goals>
-        <goal>start</goal>
-      </goals>
-      <configuration>
-        <images>
-          <image>
-            <name>docker.elastic.co/elasticsearch/elasticsearch-oss:6.7.0</name>
-            <alias>it-elasticsearch</alias>
-            <run>
-              <ports>
-                <port>9200:9200</port>
-                <port>9300:9300</port>
-              </ports>
-              <wait>
-                <http>
-                  <method>GET</method>
-                  <status>200</status>
-                  <url>http://localhost:9200/_cat/health</url>
-                </http>
-                <time>60000</time>
-              </wait>
-            </run>
-          </image>
-        </images>
-      </configuration>
-    </execution>
-    <execution>
-      <id>remove-it-database</id>
-      <phase>post-integration-test</phase>
-      <goals>
-        <goal>stop</goal>
-      </goals>
-      <configuration>
-        <removeVolumes>true</removeVolumes>
-      </configuration>
-    </execution>
-  </executions>
-</plugin>
+ElasticsearchContainer container = new CustomElasticSearchContainer("docker.elastic.co/elasticsearch/elasticsearch:6.7.0");
 ```
-We stop the elasticsearch container after running the tests in post-integration-test phase.
+
+Start elasticsearch before running the tests:
+```
+container.start();
+```
+
+Stop it after the tests:
+```
+container.stop();
+```
 
 Run the integration test using maven
 ```
 mvn clean verify
 ```
-### Start elasticsearch container manually
-If you want to run integration test on IDE or if you want to manually test the services, you have to start and stop elasticsearch yourself
+
+### Manual test
+If you want to test manually, you have to start elasticsearch container yourself
 
 Make sure that you have installed docker locally
 
@@ -115,3 +76,5 @@ Start and stop elasticsearch container
 docker start it-elasticsearch
 docker stop it-elasticsearch
 ```
+
+Run the application: Right click on StudentServicesApplication.java --> run
