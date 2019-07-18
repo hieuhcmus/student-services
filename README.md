@@ -45,7 +45,7 @@ Only the students with the fields that match all the given search fields will be
 curl -i localhost:8080//students/search?firstName=Hieu&lastName=Tran
 ```
 
-The following elasticsearch DSL query will be generated in the repository:
+The following elasticsearch DSL query will be generated in the repository(see function StudentRepositoryImpl.search):
 ```
 {
   "query": {
@@ -75,7 +75,7 @@ The following elasticsearch DSL query will be generated in the repository:
 Full text search on the fields: firstName, lastName, schoolCode, grade, id
 Student is returned if one of the fields matches the given query string.
 
-generated elasticsearch DSL query:
+generated elasticsearch DSL query for StudentRepositoryImpl.searchFullText method:
 ```
 {
     "query": {
