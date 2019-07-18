@@ -38,15 +38,18 @@ curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" h
 ```
 Posting a student with existing id will update the existing record in elasticsearch instead of creating a new one.
 
+
 #### Search students by combination fields: GET /students/search?firstName=&lastName=&schoolCode=&grade=&id=
 Only the students with the fields that match all the given search fields will be returned, the empty query param will be ignored.
 ```
 curl -i localhost:8080//students/search?firstName=Hieu&lastName=Tran
 ```
 
+
 #### Full text search: GET /students/searchFullText?query=
 Full text search on the fields: firstName, lastName, schoolCode, grade, id
 Student is returned if one of the fields matches the given query string.
+
 
 ### Integration test
 Maven fail safe plugin will run all the integration tests, here I configured it to run only the test ended with "IntegrationTest"
