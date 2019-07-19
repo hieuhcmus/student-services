@@ -44,7 +44,7 @@ public class StudentServicesIntegrationTest {
 
 	@Before
 	public void init() throws Exception {
-		container = new CustomElasticSearchContainer("docker.elastic.co/elasticsearch/elasticsearch:6.4.1");
+		container = new CustomElasticSearchContainer("docker.elastic.co/elasticsearch/elasticsearch:6.7.0");
 		container.waitingFor(Wait.forHttp("/"));
 		container.start();
 
@@ -106,9 +106,11 @@ public class StudentServicesIntegrationTest {
 	@Test
 	public void testCreateStudent() throws Exception {
 		Student s = new Student();
+		s.setId("DFG");
 		s.setFirstName("Hieu");
 		s.setLastName("Tran");
 		s.setSchoolCode("ABC123");
+		s.setGrade("5.0");
 		Address address = new Address();
 		address.setCity("Austin");
 		address.setZip("78759");
@@ -126,9 +128,11 @@ public class StudentServicesIntegrationTest {
 	@Test
 	public void testUpdateStudent() throws Exception {
 		Student s = new Student();
+		s.setId("ABC");
 		s.setFirstName("Hieu");
 		s.setLastName("Tran");
 		s.setSchoolCode("Code1");
+		s.setGrade("4.0");
 		Address address = new Address();
 		address.setCity("Austin");
 		address.setZip("78759");
@@ -209,5 +213,17 @@ public class StudentServicesIntegrationTest {
 
 		request = new StudentSearchRequest("123", "Daniel", "", "", "");
 		Assert.assertEquals(1, searchByCriteria(request).size());
+	}
+
+	@Test
+	public void testDataValidation() throws Exception {
+		Student student = new Student("123", "Daniel", "Kolova", "", "");
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/students")
+				.accept(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(student))
+				.contentType(MediaType.APPLICATION_JSON);
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		//data validation error as schoolCode and grade are missing
+		Assert.assertEquals(400, result.getResponse().getStatus());
 	}
 }
