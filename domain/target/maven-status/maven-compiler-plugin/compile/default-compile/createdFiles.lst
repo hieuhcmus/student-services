@@ -1,6 +1,0 @@
-com/karrostech/interfaces/StudentService.class
-com/karrostech/domain/StudentSearchRequest.class
-com/karrostech/interfaces/StudentRepository.class
-com/karrostech/impl/StudentServiceImpl.class
-com/karrostech/domain/Address.class
-com/karrostech/domain/Student.class
