@@ -32,7 +32,7 @@ The project applies Onion architecture, there are 4 modules:
  curl -i localhost:8080/students/{id}
 ```
 
-#### Save or edit a student: POST /students
+#### Create or update a student: POST /students
 ```
 curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" http://localhost:8080/students -d '{"firstName": "Hieu", "lastName" : "Tran", "middleName": "Van", "schoolCode": "UNS01", "address": {"city": "Austin", "zip": "78759"}}'
 ```
@@ -87,6 +87,68 @@ generated elasticsearch DSL query for StudentRepositoryImpl.searchFullText metho
 }
 ```
 
+### Data validation
+The validation is done in the restful services before persiting to elasticsearch, this is done by adding validation annotations in the DTO's fields
+
+```
+public class StudentDTO {
+	@NotBlank
+	private String id;
+
+	@NotBlank
+	private String firstName;
+
+	@NotBlank
+	private String lastName;
+	private String middleName;
+
+	@NotBlank
+	private String schoolCode;
+
+	@NotBlank
+	private String grade;
+  ...
+  
+}
+```
+Sample error message when required fields are missing:
+
+```
+{
+    "timestamp": "2019-07-19T01:36:58.725+0000",
+    "status": 400,
+    "error": "Bad Request",
+    "errors": [
+        {
+            "codes": [
+                "NotBlank.studentDTO.grade",
+                "NotBlank.grade",
+                "NotBlank.java.lang.String",
+                "NotBlank"
+            ],
+            "arguments": [
+                {
+                    "codes": [
+                        "studentDTO.grade",
+                        "grade"
+                    ],
+                    "arguments": null,
+                    "defaultMessage": "grade",
+                    "code": "grade"
+                }
+            ],
+            "defaultMessage": "must not be blank",
+            "objectName": "studentDTO",
+            "field": "grade",
+            "rejectedValue": "",
+            "bindingFailure": false,
+            "code": "NotBlank"
+        }
+    ],
+    "message": "Validation failed for object='studentDTO'. Error count: 1",
+    "path": "/students"
+}
+```
 
 ### Integration test
 Maven fail safe plugin will run all the integration tests, here I configured it to run only the test ended with "IntegrationTest"
