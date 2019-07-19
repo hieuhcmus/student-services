@@ -173,20 +173,20 @@ Note: Make sure that you already installed docker, and it's up and running.
 in StudentServicesIntegrationTest, start elasticsearch container:
 ```
 ElasticsearchContainer container = new CustomElasticSearchContainer("docker.elastic.co/elasticsearch/elasticsearch:6.7.0");
-```
-
-Start elasticsearch before running the tests:
-```
+...
+//Start elasticsearch before running the tests:
 container.start();
-```
 
-Stop it after the tests:
-```
+...
+//Stop it after the tests:
 container.stop();
 ```
 
 Run the integration test using maven
 ```
+//since we use the same port, make sure we stop elasticsearch before running the tests
+docker stop it-elasticsearch
+
 mvn clean verify
 ```
 
@@ -194,7 +194,7 @@ mvn clean verify
 If you want to start the application for manual testing, you have to start elasticsearch container and the application
 
 To start the application, Right click on StudentServicesApplication.java --> run
-or in student-rest-services project, run
+or in student-rest-services project run the command:
 ```
 mvn spring-boot:run
 ```
