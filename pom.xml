@@ -12,6 +12,7 @@
         <module>domain</module>
         <module>repository</module>
         <module>application-services</module>
+        <module>student-rest-services</module>
     </modules>
 
 
